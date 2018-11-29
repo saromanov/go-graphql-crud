@@ -34,7 +34,19 @@ func main() {
 			},
 			"lastName": &graphql.Field{
 				Type: graphql.String,
-			}
+			},
+		},
+	})
+
+	rootQuery := graphql.NewObject(graphql.ObjectConfig{
+		Name: "Query",
+		Fields: graphql.Fields{
+			"users": &graphql.Field{
+				Type: graphql.NewList(userType),
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					return nil, nil
+				},
+			},
 		},
 	})
 
