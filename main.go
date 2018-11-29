@@ -26,6 +26,18 @@ type Attachment struct {
 }
 
 func main() {
+	userType := graphql.NewObject(graphql.ObjectConfig{
+		Name: "Firstname",
+		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type: graphql.String,
+			},
+			"lastName": &graphql.Field{
+				Type: graphql.String,
+			}
+		},
+	})
+
 	schema, _ := graphql.NewSchema(graphql.SchemaConfig{})
 	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 		result := graphql.Do(graphql.Params{
