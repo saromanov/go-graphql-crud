@@ -64,6 +64,11 @@ func main() {
 		Fields: graphql.Fields{
 			"users": &graphql.Field{
 				Type: graphql.NewList(userType),
+				Args: graphql.FieldConfigArgument{
+					"user": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					return users, nil
 				},
