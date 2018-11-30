@@ -76,7 +76,9 @@ func main() {
 		},
 	})
 
-	schema, _ := graphql.NewSchema(graphql.SchemaConfig{})
+	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
+		Query: rootQuery,
+	})
 	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 		result := graphql.Do(graphql.Params{
 			Schema:        schema,
