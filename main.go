@@ -26,6 +26,17 @@ type Attachment struct {
 }
 
 func main() {
+	var users []User = []User{
+		User{
+			ID:          "1",
+			Firstname:   "Sergey",
+			Lastname:    "Romanov",
+			Phone:       "+7123456789",
+			Gender:      "M",
+			CreatedDate: time.Now().UTC(),
+		},
+	}
+
 	userType := graphql.NewObject(graphql.ObjectConfig{
 		Name: "Firstname",
 		Fields: graphql.Fields{
@@ -44,7 +55,7 @@ func main() {
 			"users": &graphql.Field{
 				Type: graphql.NewList(userType),
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					return nil, nil
+					return users, nil
 				},
 			},
 		},
