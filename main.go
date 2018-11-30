@@ -76,8 +76,40 @@ func main() {
 		},
 	})
 
+	rootMutation := graphql.NewObject(graphql.ObjectConfig{
+		Name: "Mutation",
+		Fields: graphql.Fields{
+			"createUser": &graphql.Field{
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"firstName": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"lastName": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"phone": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					var user User
+					user.ID = params.Args["id"].(string)
+					user.Firstname = params.Args["album"].(string)
+					user.Lastname = params.Args["title"].(string)
+					user.Phone = params.Args["duration"].(string)
+					users = append(users, user)
+					return user, nil
+				},
+			},
+		},
+	})
+
 	schema, _ := graphql.NewSchema(graphql.SchemaConfig{
-		Query: rootQuery,
+		Query:    rootQuery,
+		Mutation: rootMutation,
 	})
 	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 		result := graphql.Do(graphql.Params{
