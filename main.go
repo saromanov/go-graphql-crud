@@ -25,6 +25,16 @@ type Attachment struct {
 	Link string `json:"link"`
 }
 
+func Filter(users []User, f func(User) bool) []User {
+	vsf := make([]User, 0)
+	for _, v := range users {
+		if f(v) {
+			vsf = append(vsf, v)
+		}
+	}
+	return vsf
+}
+
 func main() {
 	var users []User = []User{
 		User{
