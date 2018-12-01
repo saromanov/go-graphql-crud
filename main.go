@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -96,10 +97,11 @@ func main() {
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					var user User
+					fmt.Println(params.Args)
 					user.ID = params.Args["id"].(string)
-					user.Firstname = params.Args["album"].(string)
-					user.Lastname = params.Args["title"].(string)
-					user.Phone = params.Args["duration"].(string)
+					user.Firstname = params.Args["firstName"].(string)
+					user.Lastname = params.Args["lastName"].(string)
+					user.Phone = params.Args["phone"].(string)
 					users = append(users, user)
 					return user, nil
 				},
