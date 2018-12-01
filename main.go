@@ -4,21 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/graphql-go/graphql"
-	"github.com/satori/go.uuid"
 )
 
 // User defines ident of the user
 type User struct {
-	ID          string       `json:"id,omitempty"`
-	Firstname   string       `json:"firstName"`
-	Lastname    string       `json:"lastName"`
-	Phone       string       `json:"phone"`
-	Gender      string       `json:"gender"`
-	Attachments []Attachment `json:"attachments"`
-	CreatedDate time.Time
+	ID        string `json:"id"`
+	Firstname string `json:"firstName"`
+	Lastname  string `json:"lastName"`
+	Phone     string `json:"phone"`
+	//Gender      string       `json:"gender"`
+	//Attachments []Attachment `json:"attachments"`
+	//CreatedDate time.Time
 }
 
 // Attachment defines additional link to attached info
@@ -51,17 +49,17 @@ func executeQuery(query string, schema graphql.Schema) *graphql.Result {
 func main() {
 	var users []User = []User{
 		User{
-			ID:          "1",
-			Firstname:   "Sergey",
-			Lastname:    "Romanov",
-			Phone:       "+7123456789",
-			Gender:      "M",
-			CreatedDate: time.Now().UTC(),
+			ID:        "1",
+			Firstname: "Sergey",
+			Lastname:  "Romanov",
+			Phone:     "+7123456789",
+			//Gender:      "M",
+			//CreatedDate: time.Now().UTC(),
 		},
 	}
 
 	userType := graphql.NewObject(graphql.ObjectConfig{
-		Name: "Firstname",
+		Name: "User",
 		Fields: graphql.Fields{
 			"id": &graphql.Field{
 				Type: graphql.String,
@@ -94,6 +92,7 @@ func main() {
 			},
 		},
 	})
+	fmt.Println(rootQuery)
 
 	rootMutation := graphql.NewObject(graphql.ObjectConfig{
 		Name: "Mutation",
@@ -101,9 +100,6 @@ func main() {
 			"createUser": &graphql.Field{
 				Type: userType,
 				Args: graphql.FieldConfigArgument{
-					"id": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
 					"firstName": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
@@ -116,10 +112,11 @@ func main() {
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					var user User
-					user.ID = uuid.Must(uuid.NewV4()).String()
-					user.Firstname = params.Args["firstName"].(string)
-					user.Lastname = params.Args["lastName"].(string)
-					user.Phone = params.Args["phone"].(string)
+					//user.ID = uuid.Must(uuid.NewV4()).String()
+					//user.Firstname = params.Args["firstName"].(string)
+					//user.Lastname = params.Args["lastName"].(string)
+					//user.Phone = params.Args["phone"].(string)
+					fmt.Println(user)
 					users = append(users, user)
 					return user, nil
 				},
