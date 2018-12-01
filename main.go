@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/graphql-go/graphql"
+	"github.com/satori/go.uuid"
 )
 
 // User defines ident of the user
@@ -87,7 +88,17 @@ func main() {
 					},
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					return users, nil
+					idQuery, ok := params.Args["id"].(string)
+					if !ok {
+						return User{}, nil
+					}
+					for _, usr := range users {
+						if usr.ID == idQuery {
+							return usr, nil
+						}
+					}
+
+					return User{}, nil
 				},
 			},
 		},
@@ -112,10 +123,10 @@ func main() {
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					var user User
-					//user.ID = uuid.Must(uuid.NewV4()).String()
-					//user.Firstname = params.Args["firstName"].(string)
-					//user.Lastname = params.Args["lastName"].(string)
-					//user.Phone = params.Args["phone"].(string)
+					user.ID = uuid.Must(uuid.NewV4()).String()
+					user.Firstname = params.Args["firstName"].(string)
+					user.Lastname = params.Args["lastName"].(string)
+					user.Phone = params.Args["phone"].(string)
 					fmt.Println(user)
 					users = append(users, user)
 					return user, nil
