@@ -3,10 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"net/http"
 	"time"
-
+	"github.com/satori/go.uuid"
 	"github.com/graphql-go/graphql"
 )
 
@@ -37,18 +36,7 @@ func Filter(users []User, f func(User) bool) []User {
 	return vsf
 }
 
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-func RandStringRunes(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
-}
-
 func main() {
-	rand.Seed(time.Now().UnixNano())
 	var users []User = []User{
 		User{
 			ID:          "1",
@@ -110,7 +98,7 @@ func main() {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					var user User
 					fmt.Println(params.Args)
-					user.ID = params.Args["id"].(string)
+					user.ID = uuid.Must(uuid.NewV4()).String()
 					user.Firstname = params.Args["firstName"].(string)
 					user.Lastname = params.Args["lastName"].(string)
 					user.Phone = params.Args["phone"].(string)
