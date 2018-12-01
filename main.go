@@ -37,6 +37,17 @@ func Filter(users []User, f func(User) bool) []User {
 	return vsf
 }
 
+func executeQuery(query string, schema graphql.Schema) *graphql.Result {
+	result := graphql.Do(graphql.Params{
+		Schema:        schema,
+		RequestString: query,
+	})
+	if len(result.Errors) > 0 {
+		fmt.Printf("wrong result, unexpected errors: %v", result.Errors)
+	}
+	return result
+}
+
 func main() {
 	var users []User = []User{
 		User{
@@ -105,7 +116,6 @@ func main() {
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					var user User
-					fmt.Println(params.Args)
 					user.ID = uuid.Must(uuid.NewV4()).String()
 					user.Firstname = params.Args["firstName"].(string)
 					user.Lastname = params.Args["lastName"].(string)
@@ -122,10 +132,7 @@ func main() {
 		Mutation: rootMutation,
 	})
 	http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
-		result := graphql.Do(graphql.Params{
-			Schema:        schema,
-			RequestString: r.URL.Query().Get("query"),
-		})
+		result := executeQuery(r.URL.Query().Get("query"), schema)
 		json.NewEncoder(w).Encode(result)
 	})
 	http.ListenAndServe(":8080", nil)
