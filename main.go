@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"github.com/satori/go.uuid"
+
 	"github.com/graphql-go/graphql"
+	"github.com/satori/go.uuid"
 )
 
 // User defines ident of the user
@@ -57,6 +58,12 @@ func main() {
 			"lastName": &graphql.Field{
 				Type: graphql.String,
 			},
+			"firstName": &graphql.Field{
+				Type: graphql.String,
+			},
+			"phone": &graphql.Field{
+				Type: graphql.String,
+			},
 		},
 	})
 
@@ -81,6 +88,7 @@ func main() {
 		Name: "Mutation",
 		Fields: graphql.Fields{
 			"createUser": &graphql.Field{
+				Type: userType,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
