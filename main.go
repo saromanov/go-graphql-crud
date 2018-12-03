@@ -158,6 +158,40 @@ func main() {
 					return user, nil
 				},
 			},
+			"updateUser": &graphql.Field{
+				Type: userType,
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"firstName": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"lastName": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"phone": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+					idQuery, ok := params.Args["id"].(string)
+					if !ok {
+						return User{}, nil
+					}
+					user := User{}
+					user.Firstname = params.Args["firstName"].(string)
+					user.Lastname = params.Args["lastName"].(string)
+					user.Phone = params.Args["phone"].(string)
+					for i, u := range users {
+						if u.ID == idQuery {
+							users[i] = user
+							break
+						}
+					}
+					return user, nil
+				},
+			},
 		},
 	})
 
