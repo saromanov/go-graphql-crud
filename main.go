@@ -135,30 +135,29 @@ func main() {
 				},
 			},
 
-			"deleteUser": &graphql.Field {
+			"deleteUser": &graphql.Field{
 				Type: userType,
 				Args: graphql.FieldConfigArgument{
-					"firstName": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-					"lastName": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-					"phone": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-					var user User
-					user.ID = uuid.Must(uuid.NewV4()).String()
-					user.Firstname = params.Args["firstName"].(string)
-					user.Lastname = params.Args["lastName"].(string)
-					user.Phone = params.Args["phone"].(string)
-					fmt.Println(user)
-					users = append(users, user)
+					idQuery, ok := params.Args["id"].(string)
+					if !ok {
+						return User{}, nil
+					}
+					user := User{}
+					for i, u := range users {
+						if u.ID == idQuery {
+							users = append(users[:i], users[:i]...)
+							user = u
+							break
+						}
+					}
 					return user, nil
 				},
-			}
+			},
 		},
 	})
 
